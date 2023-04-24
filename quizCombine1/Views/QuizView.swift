@@ -32,7 +32,7 @@ struct QuestionView: View {
             VStack {
                 Text(quizModel.questions[quizViewModel.currentQuestionIndex].question)
                     .font(.largeTitle)
-
+                    .frame(width: 300, height: 250)
                 ForEach(0..<quizModel.questions[quizViewModel.currentQuestionIndex].options.count, id: \.self) { index in
                     Button(action: {
                         isButtonDisabled = true
