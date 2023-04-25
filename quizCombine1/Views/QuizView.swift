@@ -15,7 +15,7 @@ struct QuizView: View {
         NavigationView {
             QuestionView()
                 .navigationBarHidden(true)
-                .environmentObject(quizModel)
+                .environmentObject(quizModel)          // 残しておいた方がいいらしいGPTいわく
                 .environmentObject(quizViewModel)
                 .background(NavigationLink("", destination: ResultView(), isActive: $quizViewModel.showResult).opacity(0))
         }
@@ -29,7 +29,7 @@ struct QuestionView: View {
 
     var body: some View {
         ZStack {
-            VStack {
+            VStack(spacing: 20) {
                 Text(quizModel.questions[quizViewModel.currentQuestionIndex].question)
                     .font(.largeTitle)
                     .frame(width: 300, height: 250)
@@ -77,6 +77,7 @@ struct ResultView: View {
                     .font(.title)
             }
         }
+        .navigationBarBackButtonHidden(true) // <- ここを追加
     }
 }
 
