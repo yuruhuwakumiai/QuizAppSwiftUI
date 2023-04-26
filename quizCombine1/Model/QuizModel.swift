@@ -7,12 +7,20 @@
 
 import SwiftUI
 
+//struct QuizQuestion: Identifiable {
+//    let id = UUID()
+//    let question: String
+//    let options: [String]
+//    let correctAnswerIndex: Int
+//}
+
 struct QuizQuestion: Identifiable {
     let id = UUID()
     let question: String
     let options: [String]
     let correctAnswerIndex: Int
 }
+
 class QuizModel: ObservableObject {
     var questions: [QuizQuestion] = [
         QuizQuestion(question: "アインシュタインが提唱した有名な理論は何ですか？",

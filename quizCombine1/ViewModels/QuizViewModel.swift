@@ -15,12 +15,22 @@ class QuizViewModel: ObservableObject {
     @Published var showResult = false
     @Published var answerResults: [Bool?] = []
     private var cancellables: Set<AnyCancellable> = []
+    @Published var quizQuestions: [QuizQuestion] = []
+    private let quizDataManager = QuizDataManager()
+
+    func loadQuizQuestions() {
+        quizDataManager.fetchQuizQuestions { [weak self] questions in
+            DispatchQueue.main.async {
+                self?.quizQuestions = questions
+            }
+        }
+    }
 
     init() {
         $showResult
             .filter { $0 }
             .sink { _ in
-                print("Quiz complete!")
+                print("Quiz complete!") // showResultがtrueになったら発動 Reslutに遷移したら
             }
             .store(in: &cancellables)
     }
