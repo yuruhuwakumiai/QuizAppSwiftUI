@@ -78,23 +78,25 @@ struct ResultView: View {
                         HStack {
                             Text("問題 \(index + 1):")
                             Text(result ? "正解" : "不正解")
+                                .foregroundColor(result ? .green : .red) // ここにforegroundColorを追加
                         }
                     }
                 }
             }
-
             Button(action: {
                 quizViewModel.resetQuiz()
             }) {
                 Text("トップに戻る")
-                    .font(.title)
+                    .font(.system(size: 20, weight: .bold))
+                    .frame(width: 250, height: 50)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .clipShape(Capsule())
             }
         }
         .navigationBarBackButtonHidden(true)
     }
 }
-
-
 
 struct AnswerButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {

@@ -14,7 +14,6 @@ class QuizViewModel: ObservableObject {
     @Published var correctAnswersCount = 0
     @Published var showResult = false
     @Published var answerResults: [Bool?] = []
-
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
@@ -51,6 +50,10 @@ class QuizViewModel: ObservableObject {
         showAnswerResult = false
     }
 
+    func prepareForNewQuiz() {
+        answerResults = []
+    }
+
     func resetQuiz() {
         currentQuestionIndex = 0
         correctAnswersCount = 0
@@ -58,9 +61,5 @@ class QuizViewModel: ObservableObject {
         answerResult = nil
         showAnswerResult = false
         prepareForNewQuiz() // ここに移動してください。
-    }
-    
-    func prepareForNewQuiz() {
-        answerResults = []
     }
 }
