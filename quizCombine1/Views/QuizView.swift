@@ -83,12 +83,15 @@ struct ResultView: View {
                     }
                 }
             }
+            .listStyle(PlainListStyle())
+            .background(Color.clear)
+            .frame(height: 500) // 行の高さを調整
             Button(action: {
                 quizViewModel.resetQuiz()
             }) {
                 Text("トップに戻る")
                     .font(.system(size: 20, weight: .bold))
-                    .frame(width: 250, height: 50)
+                    .frame(width: 200, height: 50)
                     .background(Color.blue)
                     .foregroundColor(.white)
                     .clipShape(Capsule())
