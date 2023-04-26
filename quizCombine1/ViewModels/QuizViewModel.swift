@@ -13,6 +13,8 @@ class QuizViewModel: ObservableObject {
     @Published var answerResult: Bool? = nil
     @Published var correctAnswersCount = 0
     @Published var showResult = false
+    @Published var answerResults: [Bool?] = []
+
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
@@ -29,6 +31,14 @@ class QuizViewModel: ObservableObject {
         showAnswerResult = true
         if answerResult! {
             correctAnswersCount += 1
+        }
+        answerResults.append(answerResult)
+    }
+
+    func selectAnswer(_ answerIndex: Int, quizModel: QuizModel) {
+        checkAnswer(answerIndex, quizModel: quizModel)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.moveToNextQuestion(quizModel: quizModel)
         }
     }
 
@@ -47,5 +57,10 @@ class QuizViewModel: ObservableObject {
         showResult = false
         answerResult = nil
         showAnswerResult = false
+        prepareForNewQuiz() // ここに移動してください。
+    }
+    
+    func prepareForNewQuiz() {
+        answerResults = []
     }
 }

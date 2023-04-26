@@ -8,11 +8,12 @@
 import SwiftUI
 
 @main
-struct quizCombine1App: App {
+struct QuizApp: App {
+    @StateObject private var quizModel = QuizModel()
+    @StateObject private var quizViewModel = QuizViewModel()
+
     var body: some Scene {
         WindowGroup {
-            let quizModel = QuizModel()
-            let quizViewModel = QuizViewModel()
             QuizView()
                 .environmentObject(quizModel)
                 .environmentObject(quizViewModel)

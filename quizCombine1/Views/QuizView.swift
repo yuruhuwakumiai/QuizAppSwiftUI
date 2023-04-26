@@ -15,12 +15,13 @@ struct QuizView: View {
         NavigationView {
             QuestionView()
                 .navigationBarHidden(true)
-                .environmentObject(quizModel)          // 残しておいた方がいいらしいGPTいわく
+                .environmentObject(quizModel)
                 .environmentObject(quizViewModel)
                 .background(NavigationLink("", destination: ResultView(), isActive: $quizViewModel.showResult).opacity(0))
         }
     }
 }
+
 
 struct QuestionView: View {
     @EnvironmentObject var quizModel: QuizModel
@@ -36,9 +37,8 @@ struct QuestionView: View {
                 ForEach(0..<quizModel.questions[quizViewModel.currentQuestionIndex].options.count, id: \.self) { index in
                     Button(action: {
                         isButtonDisabled = true
-                        quizViewModel.checkAnswer(index, quizModel: quizModel)
+                        quizViewModel.selectAnswer(index, quizModel: quizModel)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            quizViewModel.moveToNextQuestion(quizModel: quizModel)
                             isButtonDisabled = false
                         }
                     }) {
@@ -65,11 +65,24 @@ struct QuestionView: View {
 
 struct ResultView: View {
     @EnvironmentObject var quizViewModel: QuizViewModel
+    @EnvironmentObject var quizModel: QuizModel
 
     var body: some View {
         VStack {
             Text("正解数: \(quizViewModel.correctAnswersCount)")
                 .font(.largeTitle)
+
+            List {
+                ForEach(0 ..< quizModel.questions.count, id: \.self) { index in
+                    if index < quizViewModel.answerResults.count, let result = quizViewModel.answerResults[index] {
+                        HStack {
+                            Text("問題 \(index + 1):")
+                            Text(result ? "正解" : "不正解")
+                        }
+                    }
+                }
+            }
+
             Button(action: {
                 quizViewModel.resetQuiz()
             }) {
@@ -77,9 +90,11 @@ struct ResultView: View {
                     .font(.title)
             }
         }
-        .navigationBarBackButtonHidden(true) // <- ここを追加
+        .navigationBarBackButtonHidden(true)
     }
 }
+
+
 
 struct AnswerButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
