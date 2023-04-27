@@ -6,22 +6,30 @@
 //
 
 import SwiftUI
+import FirebaseDatabase
 
 struct QuizView: View {
-    @EnvironmentObject var quizModel: QuizModel
     @EnvironmentObject var quizViewModel: QuizViewModel
+    @EnvironmentObject var quizModel: QuizModel
 
     var body: some View {
         NavigationView {
-            QuestionView()
-                .navigationBarHidden(true)
-                .environmentObject(quizModel)
-                .environmentObject(quizViewModel)
-                .background(NavigationLink("", destination: ResultView(), isActive: $quizViewModel.showResult).opacity(0))
+            Group {
+                if quizViewModel.quizQuestions.isEmpty {
+                    ProgressView()
+                } else {
+                    QuestionView()
+                        .navigationBarHidden(true)
+                        .environmentObject(quizViewModel)
+                        .background(NavigationLink("", destination: ResultView(), isActive: $quizViewModel.showResult).opacity(0))
+                }
+            }
+            .onAppear {
+                quizViewModel.loadQuizQuestions()
+            }
         }
     }
 }
-
 
 struct QuestionView: View {
     @EnvironmentObject var quizModel: QuizModel
@@ -31,10 +39,10 @@ struct QuestionView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 20) {
-                Text(quizModel.questions[quizViewModel.currentQuestionIndex].question)
+                Text(quizViewModel.quizQuestions[quizViewModel.currentQuestionIndex].question)
                     .font(.largeTitle)
                     .frame(width: 300, height: 250)
-                ForEach(0..<quizModel.questions[quizViewModel.currentQuestionIndex].options.count, id: \.self) { index in
+                ForEach(0..<quizViewModel.quizQuestions[quizViewModel.currentQuestionIndex].options.count, id: \.self) { index in
                     Button(action: {
                         isButtonDisabled = true
                         quizViewModel.selectAnswer(index, quizModel: quizModel)
@@ -42,7 +50,7 @@ struct QuestionView: View {
                             isButtonDisabled = false
                         }
                     }) {
-                        Text(quizModel.questions[quizViewModel.currentQuestionIndex].options[index])
+                        Text(quizViewModel.quizQuestions[quizViewModel.currentQuestionIndex].options[index])
                             .font(.system(size: 20))
                     }
                     .buttonStyle(AnswerButtonStyle())
@@ -62,6 +70,7 @@ struct QuestionView: View {
         }
     }
 }
+
 
 struct ResultView: View {
     @EnvironmentObject var quizViewModel: QuizViewModel

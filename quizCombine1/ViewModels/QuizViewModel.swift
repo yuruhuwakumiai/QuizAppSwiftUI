@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import Combine
+import FirebaseDatabase
 
 class QuizViewModel: ObservableObject {
     @Published var currentQuestionIndex = 0
@@ -36,7 +37,7 @@ class QuizViewModel: ObservableObject {
     }
 
     func checkAnswer(_ answerIndex: Int, quizModel: QuizModel) {
-        answerResult = (answerIndex == quizModel.questions[currentQuestionIndex].correctAnswerIndex)
+        answerResult = (answerIndex == quizQuestions[currentQuestionIndex].correctAnswerIndex)
         showAnswerResult = true
         if answerResult! {
             correctAnswersCount += 1
