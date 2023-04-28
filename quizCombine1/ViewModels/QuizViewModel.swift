@@ -16,16 +16,6 @@ class QuizViewModel: ObservableObject {
     @Published var showResult = false
     @Published var answerResults: [Bool?] = []
     private var cancellables: Set<AnyCancellable> = []
-    @Published var quizQuestions: [QuizQuestion] = []
-    private let quizDataManager = QuizDataManager()
-
-    func loadQuizQuestions() {
-        quizDataManager.fetchQuizQuestions { [weak self] questions in
-            DispatchQueue.main.async {
-                self?.quizQuestions = questions
-            }
-        }
-    }
 
     init() {
         $showResult
@@ -37,7 +27,7 @@ class QuizViewModel: ObservableObject {
     }
 
     func checkAnswer(_ answerIndex: Int, quizModel: QuizModel) {
-        answerResult = (answerIndex == quizQuestions[currentQuestionIndex].correctAnswerIndex)
+        answerResult = (answerIndex == quizModel.questions[currentQuestionIndex].correctAnswerIndex)
         showAnswerResult = true
         if answerResult! {
             correctAnswersCount += 1

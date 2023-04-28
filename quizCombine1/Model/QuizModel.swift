@@ -54,8 +54,13 @@ struct QuizQuestion: Codable {
 
 class QuizModel: ObservableObject {
     @Published var questions: [QuizQuestion] = []
+    private let quizDataManager = QuizDataManager()
 
-    func loadQuestions() {
-        // Firebase Realtime Databaseからデータを読み込む処理を実装
+    func loadQuizQuestions() {
+        quizDataManager.fetchQuizQuestions { [weak self] questions in
+            DispatchQueue.main.async {
+                self?.questions = questions
+            }
+        }
     }
 }

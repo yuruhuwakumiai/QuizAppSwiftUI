@@ -4,7 +4,6 @@
 //
 //  Created by 橋元雄太郎 on 2023/04/22.
 //
-
 import SwiftUI
 import FirebaseDatabase
 
@@ -15,17 +14,18 @@ struct QuizView: View {
     var body: some View {
         NavigationView {
             Group {
-                if quizViewModel.quizQuestions.isEmpty {
+                if quizModel.questions.isEmpty {
                     ProgressView()
                 } else {
                     QuestionView()
                         .navigationBarHidden(true)
                         .environmentObject(quizViewModel)
+                        .environmentObject(quizModel)
                         .background(NavigationLink("", destination: ResultView(), isActive: $quizViewModel.showResult).opacity(0))
                 }
             }
             .onAppear {
-                quizViewModel.loadQuizQuestions()
+                quizModel.loadQuizQuestions()
             }
         }
     }
@@ -39,10 +39,10 @@ struct QuestionView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 20) {
-                Text(quizViewModel.quizQuestions[quizViewModel.currentQuestionIndex].question)
+                Text(quizModel.questions[quizViewModel.currentQuestionIndex].question)
                     .font(.largeTitle)
                     .frame(width: 300, height: 250)
-                ForEach(0..<quizViewModel.quizQuestions[quizViewModel.currentQuestionIndex].options.count, id: \.self) { index in
+                ForEach(0..<quizModel.questions[quizViewModel.currentQuestionIndex].options.count, id: \.self) { index in
                     Button(action: {
                         isButtonDisabled = true
                         quizViewModel.selectAnswer(index, quizModel: quizModel)
@@ -50,7 +50,7 @@ struct QuestionView: View {
                             isButtonDisabled = false
                         }
                     }) {
-                        Text(quizViewModel.quizQuestions[quizViewModel.currentQuestionIndex].options[index])
+                        Text(quizModel.questions[quizViewModel.currentQuestionIndex].options[index])
                             .font(.system(size: 20))
                     }
                     .buttonStyle(AnswerButtonStyle())
@@ -70,7 +70,6 @@ struct QuestionView: View {
         }
     }
 }
-
 
 struct ResultView: View {
     @EnvironmentObject var quizViewModel: QuizViewModel
